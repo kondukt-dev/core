@@ -31,9 +31,7 @@ export function registerScaffoldCommand(program: Command): void {
     .action(async (name: string, opts: ScaffoldOptions) => {
       const template = opts.template as TemplateName;
       if (template !== "typescript" && template !== "python") {
-        throw new Error(
-          `Unsupported --template '${opts.template}' (use 'typescript' or 'python')`,
-        );
+        throw new Error(`Unsupported --template '${opts.template}' (use 'typescript' or 'python')`);
       }
       const tools: ScaffoldTool[] = (opts.tool ?? []).map((s) => parseToolSpec(s));
       const cfg: ScaffoldConfig = {

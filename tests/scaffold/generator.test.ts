@@ -18,43 +18,39 @@ describe("ScaffoldGenerator — TypeScript", () => {
     rmSync(tmp, { recursive: true, force: true });
   });
 
-  it(
-    "generates a TS project that installs and builds",
-    async () => {
-      const cfg: ScaffoldConfig = {
-        name: "demo-ts-server",
-        template: "typescript",
-        description: "smoke test",
-        tools: [
-          {
-            name: "echo",
-            description: "Echo back",
-            parameters: { text: { type: "string", description: "text", required: true } },
-          },
-        ],
-        outputDir: tmp,
-      };
-      const result = await new ScaffoldGenerator().generate(cfg);
-      const root = join(tmp, "demo-ts-server");
-      expect(result.outputDir).toBe(root);
-      expect(result.files).toContain("src/index.ts");
-      expect(result.files).toContain("package.json");
-      expect(result.files).toContain("tsconfig.json");
-      expect(result.files).toContain(".gitignore");
-      expect(result.files).toContain(".github/workflows/ci.yml");
+  it("generates a TS project that installs and builds", async () => {
+    const cfg: ScaffoldConfig = {
+      name: "demo-ts-server",
+      template: "typescript",
+      description: "smoke test",
+      tools: [
+        {
+          name: "echo",
+          description: "Echo back",
+          parameters: { text: { type: "string", description: "text", required: true } },
+        },
+      ],
+      outputDir: tmp,
+    };
+    const result = await new ScaffoldGenerator().generate(cfg);
+    const root = join(tmp, "demo-ts-server");
+    expect(result.outputDir).toBe(root);
+    expect(result.files).toContain("src/index.ts");
+    expect(result.files).toContain("package.json");
+    expect(result.files).toContain("tsconfig.json");
+    expect(result.files).toContain(".gitignore");
+    expect(result.files).toContain(".github/workflows/ci.yml");
 
-      const indexTs = readFileSync(join(root, "src/index.ts"), "utf8");
-      expect(indexTs).toContain('name: "echo"');
-      const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
-      expect(pkg.name).toBe("demo-ts-server");
+    const indexTs = readFileSync(join(root, "src/index.ts"), "utf8");
+    expect(indexTs).toContain('name: "echo"');
+    const pkg = JSON.parse(readFileSync(join(root, "package.json"), "utf8"));
+    expect(pkg.name).toBe("demo-ts-server");
 
-      await execa("pnpm", ["install", "--ignore-scripts"], { cwd: root, timeout: 120_000 });
-      await execa("pnpm", ["build"], { cwd: root, timeout: 60_000 });
-      const distListing = readdirSync(join(root, "dist"));
-      expect(distListing).toContain("index.js");
-    },
-    180_000,
-  );
+    await execa("pnpm", ["install", "--ignore-scripts"], { cwd: root, timeout: 120_000 });
+    await execa("pnpm", ["build"], { cwd: root, timeout: 60_000 });
+    const distListing = readdirSync(join(root, "dist"));
+    expect(distListing).toContain("index.js");
+  }, 180_000);
 });
 
 describe("ScaffoldGenerator — Python", () => {
