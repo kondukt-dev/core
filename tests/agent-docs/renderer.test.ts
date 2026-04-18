@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { renderClaudeMd } from "../../src/claudemd/renderer.js";
-import type { ProjectAnalysis } from "../../src/claudemd/types.js";
+import { renderClaudeMd } from "../../src/agent-docs/renderer.js";
+import type { ProjectAnalysis } from "../../src/agent-docs/types.js";
 
 const baseAnalysis: ProjectAnalysis = {
   projectPath: "/tmp/sample",

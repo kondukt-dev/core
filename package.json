@@ -17,6 +17,7 @@
     "./server": "./dist/server/index.js",
     "./validator": "./dist/validator/index.js",
     "./scaffold": "./dist/scaffold/index.js",
+    "./agent-docs": "./dist/agent-docs/index.js",
     "./claudemd": "./dist/claudemd/index.js"
   },
   "bin": {
