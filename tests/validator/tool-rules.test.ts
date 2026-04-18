@@ -51,9 +51,7 @@ describe("tool-schema-valid", () => {
     const issues = runToolRules([
       makeTool({ inputSchema: "not-an-object" as unknown as Record<string, unknown> }),
     ]);
-    expect(issues.some((i) => i.rule === "tool-schema-valid" && i.severity === "error")).toBe(
-      true,
-    );
+    expect(issues.some((i) => i.rule === "tool-schema-valid" && i.severity === "error")).toBe(true);
   });
 });
 

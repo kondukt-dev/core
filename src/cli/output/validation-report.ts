@@ -24,9 +24,7 @@ function renderIssue(issue: ValidationIssue): string {
   const tag = tagFor(issue.severity);
   const path = issue.path ? chalk.dim(` (${issue.path})`) : "";
   const head = `${tag} ${chalk.bold(issue.rule)}: ${issue.message}${path}`;
-  const suggestion = issue.suggestion
-    ? `\n  ${chalk.dim("→")} ${chalk.dim(issue.suggestion)}`
-    : "";
+  const suggestion = issue.suggestion ? `\n  ${chalk.dim("→")} ${chalk.dim(issue.suggestion)}` : "";
   return head + suggestion;
 }
 

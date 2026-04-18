@@ -1,9 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { McpConnection } from "../../src/client/index.js";
-import {
-  PROTOCOL_RULES,
-  runProtocolRules,
-} from "../../src/validator/rules/protocol-rules.js";
+import { PROTOCOL_RULES, runProtocolRules } from "../../src/validator/rules/protocol-rules.js";
 import type { StdioServerConfig } from "../../src/client/types.js";
 
 const mockConfig: StdioServerConfig = {
