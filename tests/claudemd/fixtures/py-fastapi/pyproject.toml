@@ -1,0 +1,19 @@
+[project]
+name = "py-fastapi-sample"
+version = "0.1.0"
+description = "FastAPI fixture for CLAUDE.md tests"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "sqlalchemy>=2.0",
+    "uvicorn>=0.30",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+py-fastapi-sample = "src.main:main"
