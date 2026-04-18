@@ -1,0 +1,31 @@
+# {{name}}
+
+{{description}}
+
+MCP server generated with [Kondukt](https://kondukt.dev).
+
+## Install
+
+```bash
+pnpm install
+pnpm build
+```
+
+## Run (stdio)
+
+```bash
+pnpm start
+```
+
+## Tools
+
+{{#each tools}}
+- **{{name}}** — {{description}}
+{{/each}}
+
+## Test with Kondukt
+
+```bash
+npx kondukt test "node dist/index.js"
+npx kondukt validate "node dist/index.js"
+```

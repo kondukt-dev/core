@@ -1,0 +1,32 @@
+# {{name}}
+
+{{description}}
+
+MCP server generated with [Kondukt](https://kondukt.dev) — Python / FastMCP.
+
+## Install
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[cli]"
+```
+
+## Run (stdio)
+
+```bash
+python -m src.server
+```
+
+## Tools
+
+{{#each tools}}
+- **{{name}}** — {{description}}
+{{/each}}
+
+## Test with Kondukt
+
+```bash
+npx kondukt test "python -m src.server"
+npx kondukt validate "python -m src.server"
+```
