@@ -148,13 +148,44 @@ describe("validate_server tool (real)", () => {
   });
 });
 
-describe("scaffold_server (stub)", () => {
-  it("returns isError with phase-4 message", async () => {
-    const r = await scaffoldServerTool.handler({ name: "x", template: "typescript" });
+describe("scaffold_server tool (real)", () => {
+  it("generates a TS project into tmp output_dir and returns a ScaffoldResult", async () => {
+    const { mkdtempSync, rmSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const tmp = mkdtempSync(join(tmpdir(), "kondukt-scaffold-srv-test-"));
+    try {
+      const r = await scaffoldServerTool.handler({
+        name: "srv-echo",
+        template: "typescript",
+        output_dir: tmp,
+        tools: [
+          {
+            name: "echo",
+            description: "Echo back",
+            parameters: { text: { type: "string", description: "text", required: true } },
+          },
+        ],
+      });
+      expect(r.isError).toBeFalsy();
+      const first = r.content[0];
+      if (first?.type !== "text") throw new Error("text expected");
+      const parsed = JSON.parse(first.text);
+      expect(parsed.outputDir).toBe(join(tmp, "srv-echo"));
+      expect(Array.isArray(parsed.files)).toBe(true);
+      expect(parsed.files).toContain("src/index.ts");
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("returns isError when template is unsupported", async () => {
+    const r = await scaffoldServerTool.handler({
+      name: "x",
+      template: "cobol",
+      tools: [],
+    });
     expect(r.isError).toBe(true);
-    const first = r.content[0];
-    if (first?.type !== "text") throw new Error("text expected");
-    expect(first.text).toMatch(/Phase 4/);
   });
 });
 

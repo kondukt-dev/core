@@ -3,6 +3,7 @@ import { Command } from "commander";
 
 import { registerCallCommand } from "./commands/call.js";
 import { registerInspectCommand } from "./commands/inspect.js";
+import { registerScaffoldCommand } from "./commands/scaffold.js";
 import { registerServeCommand } from "./commands/serve.js";
 import { registerTestCommand } from "./commands/test.js";
 import { registerValidateCommand } from "./commands/validate.js";
@@ -18,6 +19,7 @@ registerTestCommand(program);
 registerInspectCommand(program);
 registerCallCommand(program);
 registerValidateCommand(program);
+registerScaffoldCommand(program);
 registerServeCommand(program);
 
 program.parseAsync().catch((err) => {
