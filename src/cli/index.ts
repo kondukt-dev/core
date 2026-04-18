@@ -2,6 +2,7 @@
 import { Command } from "commander";
 
 import { registerCallCommand } from "./commands/call.js";
+import { registerClaudeMdCommand } from "./commands/claudemd.js";
 import { registerInspectCommand } from "./commands/inspect.js";
 import { registerScaffoldCommand } from "./commands/scaffold.js";
 import { registerServeCommand } from "./commands/serve.js";
@@ -20,6 +21,7 @@ registerInspectCommand(program);
 registerCallCommand(program);
 registerValidateCommand(program);
 registerScaffoldCommand(program);
+registerClaudeMdCommand(program);
 registerServeCommand(program);
 
 program.parseAsync().catch((err) => {
