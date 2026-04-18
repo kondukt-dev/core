@@ -17,9 +17,9 @@ describe("buildAuthHeaders", () => {
   });
 
   it("returns custom api-key header", () => {
-    expect(
-      buildAuthHeaders({ type: "api-key", headerName: "X-API-Key", value: "xyz" }),
-    ).toEqual({ "X-API-Key": "xyz" });
+    expect(buildAuthHeaders({ type: "api-key", headerName: "X-API-Key", value: "xyz" })).toEqual({
+      "X-API-Key": "xyz",
+    });
   });
 
   it("returns custom headers as-is", () => {

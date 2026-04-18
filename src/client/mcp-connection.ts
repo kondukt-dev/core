@@ -146,12 +146,15 @@ export class McpConnection extends EventEmitter {
     const resp = await this.client!.readResource({ uri });
     return {
       uri,
-      contents: resp.contents.map((c) => ({
-        uri: c.uri,
-        ...(typeof c.text === "string" ? { text: c.text } : {}),
-        ...(typeof c.blob === "string" ? { blob: c.blob } : {}),
-        ...(c.mimeType !== undefined ? { mimeType: c.mimeType } : {}),
-      })),
+      contents: resp.contents.map((c) => {
+        const raw = c as { uri: string; text?: string; blob?: string; mimeType?: string };
+        return {
+          uri: raw.uri,
+          ...(typeof raw.text === "string" ? { text: raw.text } : {}),
+          ...(typeof raw.blob === "string" ? { blob: raw.blob } : {}),
+          ...(raw.mimeType !== undefined ? { mimeType: raw.mimeType } : {}),
+        };
+      }),
     };
   }
 

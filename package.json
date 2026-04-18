@@ -5,16 +5,34 @@
   "type": "module",
   "license": "MIT",
   "author": "kondukt-dev",
-  "repository": { "type": "git", "url": "https://github.com/kondukt-dev/core.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kondukt-dev/core.git"
+  },
   "homepage": "https://kondukt.dev",
   "bugs": "https://github.com/kondukt-dev/core/issues",
   "exports": {
     ".": "./dist/index.js",
     "./client": "./dist/client/index.js"
   },
-  "files": ["dist", "LICENSE", "README.md"],
-  "keywords": ["mcp", "model-context-protocol", "devtools", "testing", "validation", "cli", "claude", "ai"],
-  "engines": { "node": ">=20" },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "devtools",
+    "testing",
+    "validation",
+    "cli",
+    "claude",
+    "ai"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -46,6 +64,8 @@
   },
   "packageManager": "pnpm@10.0.0",
   "pnpm": {
-    "onlyBuiltDependencies": ["esbuild"]
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
   }
 }

@@ -3,10 +3,7 @@ import { randomUUID } from "node:crypto";
 
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 
 export async function startMockHttpServer(): Promise<{ url: string; close: () => Promise<void> }> {
   const mcp = new Server(

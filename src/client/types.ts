@@ -58,11 +58,7 @@ export interface ServerInfo {
   promptCount: number;
 }
 
-export type ConnectionStatusValue =
-  | "connecting"
-  | "connected"
-  | "error"
-  | "disconnected";
+export type ConnectionStatusValue = "connecting" | "connected" | "error" | "disconnected";
 
 export interface ConnectionStatus {
   id: string;
@@ -124,8 +120,6 @@ export interface Prompt {
 export interface PromptMessages {
   messages: Array<{
     role: "user" | "assistant";
-    content:
-      | { type: "text"; text: string }
-      | { type: "image"; data: string; mimeType: string };
+    content: { type: "text"; text: string } | { type: "image"; data: string; mimeType: string };
   }>;
 }

@@ -1,10 +1,5 @@
 import { describe, expect, it } from "vitest";
-import {
-  ConnectionError,
-  McpError,
-  ProtocolError,
-  TimeoutError,
-} from "../../src/client/errors.js";
+import { ConnectionError, McpError, ProtocolError, TimeoutError } from "../../src/client/errors.js";
 
 describe("error hierarchy", () => {
   it("McpError is the base and extends Error", () => {
