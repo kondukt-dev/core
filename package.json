@@ -14,7 +14,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./client": "./dist/client/index.js",
-    "./server": "./dist/server/index.js"
+    "./server": "./dist/server/index.js",
+    "./validator": "./dist/validator/index.js"
   },
   "bin": {
     "kondukt": "./dist/cli/index.js"
