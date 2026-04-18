@@ -5,6 +5,7 @@ import { registerCallCommand } from "./commands/call.js";
 import { registerInspectCommand } from "./commands/inspect.js";
 import { registerServeCommand } from "./commands/serve.js";
 import { registerTestCommand } from "./commands/test.js";
+import { registerValidateCommand } from "./commands/validate.js";
 
 const program = new Command();
 program
@@ -16,6 +17,7 @@ program
 registerTestCommand(program);
 registerInspectCommand(program);
 registerCallCommand(program);
+registerValidateCommand(program);
 registerServeCommand(program);
 
 program.parseAsync().catch((err) => {

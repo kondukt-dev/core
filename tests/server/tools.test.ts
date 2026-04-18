@@ -128,13 +128,23 @@ describe("get_prompt tool", () => {
   });
 });
 
-describe("validate_server (stub)", () => {
-  it("returns isError with phase-3 message", async () => {
-    const r = await validateServerTool.handler({ command: "x" });
-    expect(r.isError).toBe(true);
+describe("validate_server tool (real)", () => {
+  it("returns a JSON ValidationResult with a score", async () => {
+    const r = await validateServerTool.handler({ command: mockCommand });
     const first = r.content[0];
     if (first?.type !== "text") throw new Error("text expected");
-    expect(first.text).toMatch(/Phase 3/);
+    const result = JSON.parse(first.text);
+    expect(typeof result.score).toBe("number");
+    expect(result.score).toBeGreaterThanOrEqual(0);
+    expect(result.score).toBeLessThanOrEqual(100);
+    expect(Array.isArray(result.issues)).toBe(true);
+  });
+
+  it("returns isError on connection failure", async () => {
+    const r = await validateServerTool.handler({
+      command: "node -e 'process.exit(1)'",
+    });
+    expect(r.isError).toBe(true);
   });
 });
 
