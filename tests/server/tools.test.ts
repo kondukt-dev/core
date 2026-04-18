@@ -148,6 +148,38 @@ describe("scaffold_server (stub)", () => {
   });
 });
 
+describe("error paths (connection failure)", () => {
+  const badCmd = "node -e 'process.exit(1)'";
+  it("list_tools returns isError on connection failure", async () => {
+    const r = await listToolsTool.handler({ command: badCmd });
+    expect(r.isError).toBe(true);
+  });
+  it("list_resources returns isError on connection failure", async () => {
+    const r = await listResourcesTool.handler({ command: badCmd });
+    expect(r.isError).toBe(true);
+  });
+  it("list_prompts returns isError on connection failure", async () => {
+    const r = await listPromptsTool.handler({ command: badCmd });
+    expect(r.isError).toBe(true);
+  });
+  it("read_resource returns isError on connection failure", async () => {
+    const r = await readResourceTool.handler({ command: badCmd, uri: "mock://x" });
+    expect(r.isError).toBe(true);
+  });
+  it("read_resource requires uri", async () => {
+    const r = await readResourceTool.handler({ command: mockCommand });
+    expect(r.isError).toBe(true);
+  });
+  it("get_prompt returns isError on connection failure", async () => {
+    const r = await getPromptTool.handler({ command: badCmd, prompt_name: "x" });
+    expect(r.isError).toBe(true);
+  });
+  it("get_prompt requires prompt_name", async () => {
+    const r = await getPromptTool.handler({ command: mockCommand });
+    expect(r.isError).toBe(true);
+  });
+});
+
 describe("tool registry", () => {
   it("exports all 9 tools with unique names", () => {
     expect(allTools.length).toBe(9);

@@ -34,9 +34,6 @@ describe("kondukt inspect", () => {
     expect(r.exitCode).toBe(0);
     const data = JSON.parse(r.stdout);
     expect(Array.isArray(data.tools)).toBe(true);
-    expect(data.tools.map((t: { name: string }) => t.name).sort()).toEqual([
-      "echo",
-      "slow_echo",
-    ]);
+    expect(data.tools.map((t: { name: string }) => t.name).sort()).toEqual(["echo", "slow_echo"]);
   });
 });
