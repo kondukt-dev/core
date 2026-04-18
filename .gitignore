@@ -145,3 +145,6 @@ coverage/
 .env.local
 *.log
 .DS_Store
+
+# Private testing / operator notes — never commit
+TESTING_FOR_HUMANS*.md

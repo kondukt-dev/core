@@ -1,7 +1,7 @@
 {
   "name": "kondukt",
-  "version": "0.1.0-dev.0",
-  "description": "MCP DevTools — test, validate, debug, and scaffold MCP servers",
+  "version": "0.1.0",
+  "description": "MCP DevTools — test, validate, debug, and scaffold MCP servers for Claude Code, Codex, Gemini CLI, and any MCP client.",
   "type": "module",
   "license": "MIT",
   "author": "kondukt-dev",
@@ -26,17 +26,23 @@
   "files": [
     "dist",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "mcp",
     "model-context-protocol",
     "devtools",
+    "cli",
     "testing",
     "validation",
-    "cli",
+    "scaffold",
     "claude",
-    "ai"
+    "claude-code",
+    "codex",
+    "gemini",
+    "ai",
+    "agents"
   ],
   "engines": {
     "node": ">=20"
