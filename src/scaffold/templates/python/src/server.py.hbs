@@ -1,0 +1,15 @@
+"""{{name}} — MCP server generated with Kondukt."""
+from mcp.server.fastmcp import FastMCP
+
+mcp = FastMCP("{{name}}")
+
+{{#each tools}}
+@mcp.tool()
+def {{snake name}}({{#each parameters}}{{@key}}: {{pyType type}}{{#unless @last}}, {{/unless}}{{/each}}) -> str:
+    """{{description}}"""
+    # TODO: implement {{name}}
+    return f"TODO: implement {{name}}"
+
+{{/each}}
+if __name__ == "__main__":
+    mcp.run()

@@ -15,7 +15,8 @@
     ".": "./dist/index.js",
     "./client": "./dist/client/index.js",
     "./server": "./dist/server/index.js",
-    "./validator": "./dist/validator/index.js"
+    "./validator": "./dist/validator/index.js",
+    "./scaffold": "./dist/scaffold/index.js"
   },
   "bin": {
     "kondukt": "./dist/cli/index.js"
@@ -39,7 +40,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/copy-templates.mjs",
     "dev": "tsup --watch",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -54,6 +55,7 @@
     "cli-table3": "^0.6.5",
     "commander": "^14.0.3",
     "debug": "^4.4.0",
+    "handlebars": "^4.7.9",
     "zod": "^3.25.0"
   },
   "devDependencies": {
