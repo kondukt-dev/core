@@ -23,5 +23,7 @@
     "eslint": "^9.0.0",
     "prettier": "^3.0.0"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  }
 }

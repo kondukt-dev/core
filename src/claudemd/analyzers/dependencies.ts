@@ -23,9 +23,7 @@ export function analyzeDependencies(projectPath: string): DependencyFacts {
         runtime: formatNodeRuntime(pkg),
         ...(pkg.name !== undefined ? { packageName: String(pkg.name) } : {}),
         ...(pkg.version !== undefined ? { packageVersion: String(pkg.version) } : {}),
-        ...(pkg.description !== undefined
-          ? { packageDescription: String(pkg.description) }
-          : {}),
+        ...(pkg.description !== undefined ? { packageDescription: String(pkg.description) } : {}),
         dependencies: toRecord(pkg.dependencies),
         devDependencies: toRecord(pkg.devDependencies),
         esm: pkg.type === "module",
