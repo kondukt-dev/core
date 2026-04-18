@@ -39,7 +39,7 @@ through natural language.
 claude mcp add kondukt -- npx kondukt serve
 ```
 
-Then ask Claude: *"Test my MCP server at `npx my-server` and validate it."*
+Then ask Claude: _"Test my MCP server at `npx my-server` and validate it."_
 
 ### Codex
 
