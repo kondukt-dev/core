@@ -47,8 +47,12 @@ describe("kondukt-server end-to-end over stdio", () => {
     expect(info.name).toBe("mock-server");
   });
 
-  it("validate_server stub returns isError", async () => {
+  it("validate_server returns ValidationResult JSON", async () => {
     const result = await conn.callTool("validate_server", { command: mockCommand });
-    expect(result.isError).toBe(true);
+    const first = result.content[0];
+    if (first?.type !== "text") throw new Error("text expected");
+    const validation = JSON.parse(first.text);
+    expect(typeof validation.score).toBe("number");
+    expect(Array.isArray(validation.issues)).toBe(true);
   });
 });
