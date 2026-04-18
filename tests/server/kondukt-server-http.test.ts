@@ -1,10 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { McpConnection } from "../../src/client/index.js";
-import {
-  startKonduktServer,
-  type KonduktServerHandle,
-} from "../../src/server/kondukt-server.js";
+import { startKonduktServer, type KonduktServerHandle } from "../../src/server/kondukt-server.js";
 
 const PORT = 18081;
 
