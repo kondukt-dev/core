@@ -6,6 +6,7 @@ export default defineConfig({
     "client/index": "src/client/index.ts",
     "server/index": "src/server/index.ts",
     "validator/index": "src/validator/index.ts",
+    "scaffold/index": "src/scaffold/index.ts",
     "cli/index": "src/cli/index.ts",
   },
   format: ["esm"],
