@@ -16,7 +16,8 @@
     "./client": "./dist/client/index.js",
     "./server": "./dist/server/index.js",
     "./validator": "./dist/validator/index.js",
-    "./scaffold": "./dist/scaffold/index.js"
+    "./scaffold": "./dist/scaffold/index.js",
+    "./claudemd": "./dist/claudemd/index.js"
   },
   "bin": {
     "kondukt": "./dist/cli/index.js"
