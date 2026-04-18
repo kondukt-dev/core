@@ -7,6 +7,7 @@ export default defineConfig({
     "server/index": "src/server/index.ts",
     "validator/index": "src/validator/index.ts",
     "scaffold/index": "src/scaffold/index.ts",
+    "agent-docs/index": "src/agent-docs/index.ts",
     "claudemd/index": "src/claudemd/index.ts",
     "cli/index": "src/cli/index.ts",
   },

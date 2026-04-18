@@ -1,14 +1,5 @@
-export { ClaudeMdGenerator } from "./generator.js";
-export { runAllAnalyzers } from "./analyze.js";
-export { renderClaudeMd } from "./renderer.js";
-export type {
-  ClaudeMdConfig,
-  ClaudeMdResult,
-  DependencyFacts,
-  Language,
-  PackageManager,
-  PatternFacts,
-  ProjectAnalysis,
-  ScriptFacts,
-  StructureFacts,
-} from "./types.js";
+/**
+ * @deprecated The `kondukt/claudemd` entry point is kept for backwards compatibility.
+ * Import from `kondukt/agent-docs` instead. All symbols are re-exported here.
+ */
+export * from "../agent-docs/index.js";

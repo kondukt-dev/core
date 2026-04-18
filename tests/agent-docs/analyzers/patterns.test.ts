@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { analyzePatterns } from "../../../src/claudemd/analyzers/patterns.js";
-import { analyzeDependencies } from "../../../src/claudemd/analyzers/dependencies.js";
-import { analyzeStructure } from "../../../src/claudemd/analyzers/structure.js";
+import { analyzePatterns } from "../../../src/agent-docs/analyzers/patterns.js";
+import { analyzeDependencies } from "../../../src/agent-docs/analyzers/dependencies.js";
+import { analyzeStructure } from "../../../src/agent-docs/analyzers/structure.js";
 
 const fixture = (name: string) => new URL(`../fixtures/${name}/`, import.meta.url).pathname;
 

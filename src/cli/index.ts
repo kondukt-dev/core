@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 
+import { registerAgentDocsCommand } from "./commands/agent-docs.js";
 import { registerCallCommand } from "./commands/call.js";
 import { registerClaudeMdCommand } from "./commands/claudemd.js";
 import { registerInspectCommand } from "./commands/inspect.js";
@@ -21,6 +22,7 @@ registerInspectCommand(program);
 registerCallCommand(program);
 registerValidateCommand(program);
 registerScaffoldCommand(program);
+registerAgentDocsCommand(program);
 registerClaudeMdCommand(program);
 registerServeCommand(program);
 

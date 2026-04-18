@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 const cli = (args: string[]) =>
   execa("pnpm", ["tsx", "src/cli/index.ts", ...args], { reject: false });
 
-const fixturePath = new URL("../claudemd/fixtures/ts-next/", import.meta.url).pathname;
+const fixturePath = new URL("../agent-docs/fixtures/ts-next/", import.meta.url).pathname;
 
 describe("kondukt claudemd", () => {
   let out: string;

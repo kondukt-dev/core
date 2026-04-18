@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { ClaudeMdGenerator } from "../../claudemd/index.js";
+import { AgentDocsGenerator } from "../../agent-docs/index.js";
 import { formatJson } from "../output/json-output.js";
 
 interface ClaudeMdOptions {
@@ -12,17 +12,29 @@ interface ClaudeMdOptions {
   format?: "pretty" | "json";
 }
 
+/**
+ * Deprecated alias — forwards to `agent-docs --target claude`.
+ * Kept for backwards compatibility with v0.1 users who ran `kondukt claudemd`.
+ */
 export function registerClaudeMdCommand(program: Command): void {
   program
     .command("claudemd")
-    .description("Analyze a project and generate a CLAUDE.md file")
+    .description("(Deprecated) Alias for `kondukt agent-docs --target claude`")
     .argument("[path]", "project root (default: current directory)", process.cwd())
     .option("--output <file>", "write to a specific file (default: <path>/CLAUDE.md)")
     .option("--stdout", "print to stdout instead of writing a file")
     .option("--format <fmt>", "output format: pretty | json", "pretty")
     .action(async (path: string, opts: ClaudeMdOptions) => {
+      process.stderr.write(
+        chalk.yellow(
+          "warning: `kondukt claudemd` is deprecated, use `kondukt agent-docs --target claude`\n",
+        ),
+      );
       const projectPath = resolve(path);
-      const result = await new ClaudeMdGenerator().generate({ projectPath });
+      const result = await new AgentDocsGenerator().generate({
+        projectPath,
+        target: "claude",
+      });
 
       if (opts.format === "json") {
         const payload = formatJson({ content: result.content, analysis: result.analysis });

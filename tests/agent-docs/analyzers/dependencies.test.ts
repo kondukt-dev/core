@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { analyzeDependencies } from "../../../src/claudemd/analyzers/dependencies.js";
+import { analyzeDependencies } from "../../../src/agent-docs/analyzers/dependencies.js";
 
 const fixture = (name: string) => new URL(`../fixtures/${name}/`, import.meta.url).pathname;
 
