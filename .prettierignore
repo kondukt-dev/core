@@ -1,0 +1,8 @@
+dist/
+coverage/
+node_modules/
+pnpm-lock.yaml
+src/scaffold/templates/
+CLAUDE.md
+AGENTS.md
+GEMINI.md
