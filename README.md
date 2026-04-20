@@ -21,6 +21,12 @@ Kondukt is an open-source developer toolkit for the [Model Context Protocol (MCP
 
 > **Status:** v0.1.x. Stable enough for daily use, but still evolving. Bug reports and PRs welcome.
 
+## Why Kondukt
+
+MCP has 97M+ SDK downloads and 10,000+ published servers. Every major AI vendor ships it. And yet, building an MCP server today feels like writing HTTP APIs in 2005 — no Postman, no linter, no scaffolder. The only existing tool (MCP Inspector) is a basic debugger; there's no validation, no scoring, no project generation.
+
+Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it should save you hours.
+
 ## Two ways to use it
 
 **As a CLI — fast feedback while you build:**
@@ -147,12 +153,6 @@ Kondukt supports both transports defined by the MCP spec:
 
 - **stdio** — pass the command directly: `npx kondukt test "npx -y my-server"`
 - **HTTP / SSE** — pass a URL: `npx kondukt test "https://my-server.example.com/mcp"`
-
-## Why Kondukt
-
-MCP has 97M+ SDK downloads and 10,000+ published servers. Every major AI vendor ships it. And yet, building an MCP server today feels like writing HTTP APIs in 2005 — no Postman, no linter, no scaffolder. The only existing tool (MCP Inspector) is a basic debugger; there's no validation, no scoring, no project generation.
-
-Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it should save you hours.
 
 ## Comparison
 
