@@ -86,6 +86,8 @@ Every violation comes with a rule ID, severity, and a suggested fix.
 
 Execute any tool exposed by a server with custom arguments. See the raw response. Essential for reproducing bugs.
 
+![kondukt call](./assets/call.gif)
+
 ### `kondukt scaffold` — new server in 10 seconds
 
 Generates a complete, runnable MCP server project. TypeScript or Python templates. Includes types, tests, CI config, and README. Define tools from the CLI:
@@ -96,9 +98,13 @@ npx kondukt scaffold weather-server \
   --tool "get_forecast:Get forecast:city:string,days:number"
 ```
 
+![kondukt scaffold](./assets/scaffold.gif)
+
 ### `kondukt agent-docs` — context files for AI coding tools
 
 Analyzes a codebase and generates `CLAUDE.md`, `AGENTS.md`, or `GEMINI.md`. Detects frameworks, ORMs, test runners, and project conventions via static analysis.
+
+![kondukt agent-docs](./assets/agent-docs.gif)
 
 ### `kondukt serve` — run Kondukt as an MCP server
 
@@ -164,12 +170,21 @@ Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it sho
 
 ### Regenerating the demo assets
 
-Run `./scripts/record-demo.sh`. Requires Homebrew.
+```bash
+./scripts/record-demo.sh                     # all scenarios
+./scripts/record-demo.sh demo scaffold       # a subset
+./scripts/record-demo.sh --upload demo       # also upload to asciinema.org
+```
 
-The script builds the CLI, records a fresh `.cast` with `asciinema`, renders it
-to `.gif` via `agg`, and produces a web-friendly `.mp4` with `ffmpeg`. All three
-outputs land in `assets/` and are committed so the README renders on GitHub
-without a build step.
+Requires Homebrew (installs `asciinema`, `agg`, and `ffmpeg` on demand). Each
+scenario in `scripts/scenarios/<name>.sh` produces three outputs:
+
+- `assets/<name>.gif` — committed, embedded in this README
+- `assets/local/<name>.cast` — asciinema source, gitignored
+- `assets/local/<name>.mp4` — H.264 fallback for Twitter/X, gitignored
+
+Only the GIFs ship in the repo; regenerating the cast and MP4 is a local
+concern.
 
 ## Contributing
 

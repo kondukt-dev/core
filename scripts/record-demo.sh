@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
-# Regenerate assets/demo.{cast,gif,mp4} from scratch.
-# One-command, idempotent. Requires Homebrew.
+# Regenerate the Kondukt CLI demo assets.
+#
+# For each named scenario under scripts/scenarios/<name>.sh this script
+# produces three files:
+#
+#   assets/<name>.gif          — committed, embedded in the README
+#   assets/local/<name>.cast   — local only (gitignored)
+#   assets/local/<name>.mp4    — local only (gitignored)
+#
+# Usage:
+#   scripts/record-demo.sh                  # record every scenario
+#   scripts/record-demo.sh demo scaffold    # record a subset
+#   scripts/record-demo.sh --upload demo    # also upload cast to asciinema.org
+#
+# Requires Homebrew; asciinema, agg, and ffmpeg are installed on demand.
 
 set -euo pipefail
 
@@ -9,32 +22,46 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 ASSETS_DIR="$REPO_ROOT/assets"
-CAST="$ASSETS_DIR/demo.cast"
-GIF="$ASSETS_DIR/demo.gif"
-MP4="$ASSETS_DIR/demo.mp4"
+LOCAL_DIR="$ASSETS_DIR/local"
+SCENARIOS_DIR="$SCRIPT_DIR/scenarios"
 
 UPLOAD=0
+ARGS=()
 for arg in "$@"; do
   case "$arg" in
     --upload) UPLOAD=1 ;;
     -h|--help)
-      cat <<EOF
-Usage: scripts/record-demo.sh [--upload]
-
-Regenerates assets/demo.cast, demo.gif, demo.mp4 from scratch.
-Requires Homebrew; asciinema, agg, and ffmpeg are installed on demand.
-
-  --upload   After recording, run \`asciinema upload assets/demo.cast\`
-             and print the public URL.
-EOF
+      sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//'
       exit 0 ;;
+    --*)
+      echo "Unknown flag: $arg" >&2; exit 2 ;;
     *)
-      echo "Unknown arg: $arg" >&2; exit 2 ;;
+      ARGS+=("$arg") ;;
   esac
 done
 
 log() { printf '\n\033[1;36m==>\033[0m %s\n' "$*"; }
 
+# Resolve which scenarios to record.
+SCENARIOS=()
+if (( ${#ARGS[@]} )); then
+  SCENARIOS=("${ARGS[@]}")
+else
+  for f in "$SCENARIOS_DIR"/*.sh; do
+    name="$(basename "$f" .sh)"
+    [[ "$name" == _* ]] && continue
+    SCENARIOS+=("$name")
+  done
+fi
+
+for name in "${SCENARIOS[@]}"; do
+  if [[ ! -f "$SCENARIOS_DIR/$name.sh" ]]; then
+    echo "error: unknown scenario '$name' (looked for $SCENARIOS_DIR/$name.sh)" >&2
+    exit 1
+  fi
+done
+
+# 1. Dependency check & install.
 log "Checking dependencies"
 MISSING=()
 for dep in asciinema agg ffmpeg; do
@@ -50,24 +77,14 @@ if (( ${#MISSING[@]} )); then
   brew install "${MISSING[@]}"
 fi
 
-log "Wiping previous assets"
-mkdir -p "$ASSETS_DIR"
-rm -f "$CAST" "$GIF" "$MP4"
-
+# 2. Build the CLI once, up front.
 log "Building CLI (pnpm build)"
 pnpm build
 
-log "Recording cast"
-asciinema rec \
-  --overwrite \
-  --window-size 100x28 \
-  --idle-time-limit 2 \
-  --command "bash '$SCRIPT_DIR/demo-scenario.sh'" \
-  "$CAST"
+mkdir -p "$ASSETS_DIR" "$LOCAL_DIR"
 
 render_gif() {
-  local font_size="$1"
-  local fps_cap="${2:-}"
+  local cast="$1" gif="$2" font_size="$3" fps_cap="${4:-}"
   local -a extra=()
   [[ -n "$fps_cap" ]] && extra+=(--fps-cap "$fps_cap")
   agg \
@@ -76,7 +93,7 @@ render_gif() {
     --theme monokai \
     --speed 1.2 \
     ${extra[@]+"${extra[@]}"} \
-    "$CAST" "$GIF"
+    "$cast" "$gif"
 }
 
 file_bytes() { stat -f%z "$1" 2>/dev/null || stat -c%s "$1"; }
@@ -91,36 +108,59 @@ human_size() {
 
 over_5mb() { awk -v b="$(file_bytes "$1")" 'BEGIN { exit !(b > 5*1024*1024) }'; }
 
-log "Rendering GIF (agg)"
-render_gif 18
+cast_duration() {
+  awk 'NR>1 && /^\[/ {
+    gsub(/^\[/, ""); split($0, a, ","); sum += a[1] + 0
+  } END { printf "%.1f", sum }' "$1"
+}
 
-if over_5mb "$GIF"; then
-  log "GIF over 5 MB — re-rendering with font-size 16 and fps-cap 10"
-  render_gif 16 10
-fi
+record_one() {
+  local name="$1"
+  local scenario="$SCENARIOS_DIR/$name.sh"
+  local cast="$LOCAL_DIR/$name.cast"
+  local gif="$ASSETS_DIR/$name.gif"
+  local mp4="$LOCAL_DIR/$name.mp4"
 
-if over_5mb "$GIF"; then
-  echo "warning: GIF still over 5 MB after fallback render. Consider reducing cols/rows in the recorder." >&2
-fi
+  log "Scenario: $name"
+  rm -f "$cast" "$gif" "$mp4"
 
-log "Rendering MP4 (ffmpeg)"
-ffmpeg -y -i "$GIF" \
-  -movflags faststart -pix_fmt yuv420p \
-  -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
-  "$MP4" \
-  -loglevel error
+  asciinema rec \
+    --overwrite \
+    --window-size 100x28 \
+    --idle-time-limit 2 \
+    --command "bash '$scenario'" \
+    "$cast"
 
-duration="$(awk 'NR>1 && /^\[/ { gsub(/^\[/, ""); split($0, a, ","); sum += a[1] + 0 } END { printf "%.1f", sum }' "$CAST")"
+  render_gif "$cast" "$gif" 18
+  if over_5mb "$gif"; then
+    log "  GIF over 5 MB — re-rendering with font-size 16 and fps-cap 10"
+    render_gif "$cast" "$gif" 16 10
+  fi
+  if over_5mb "$gif"; then
+    echo "  warning: $(basename "$gif") still over 5 MB after fallback render." >&2
+  fi
+
+  ffmpeg -y -i "$gif" \
+    -movflags faststart -pix_fmt yuv420p \
+    -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" \
+    "$mp4" \
+    -loglevel error
+
+  printf '  cast: %s  (%s)\n' "$cast" "$(human_size "$cast")"
+  printf '  gif:  %s  (%s)\n' "$gif"  "$(human_size "$gif")"
+  printf '  mp4:  %s  (%s)\n' "$mp4"  "$(human_size "$mp4")"
+  printf '  duration: %ss\n' "$(cast_duration "$cast")"
+
+  if (( UPLOAD )); then
+    log "  Uploading $name cast"
+    asciinema upload "$cast"
+  fi
+}
+
+for name in "${SCENARIOS[@]}"; do
+  record_one "$name"
+done
 
 log "Done"
-printf '  cast: %s  (%s)\n' "$CAST" "$(human_size "$CAST")"
-printf '  gif:  %s  (%s)\n' "$GIF"  "$(human_size "$GIF")"
-printf '  mp4:  %s  (%s)\n' "$MP4"  "$(human_size "$MP4")"
-printf '  duration: %ss\n' "${duration:-?}"
-printf '\nREADME snippet:\n'
-printf '  ![Kondukt demo](./assets/demo.gif)\n'
-
-if (( UPLOAD )); then
-  log "Uploading cast to asciinema.org"
-  asciinema upload "$CAST"
-fi
+printf '  Committed GIFs live in %s\n' "$ASSETS_DIR/"
+printf '  Local-only cast/mp4 in  %s\n' "$LOCAL_DIR/"
