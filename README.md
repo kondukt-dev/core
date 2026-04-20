@@ -27,6 +27,16 @@ MCP has 97M+ SDK downloads and 10,000+ published servers. Every major AI vendor 
 
 Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it should save you hours.
 
+|                                 | MCP Inspector | Kondukt                   |
+| ------------------------------- | ------------- | ------------------------- |
+| Inspect tools/resources/prompts | ✅            | ✅                        |
+| Call tools interactively        | ✅            | ✅                        |
+| Protocol validation             | ❌            | ✅ (19 rules)             |
+| Quality score                   | ❌            | ✅ (0–100)                |
+| Scaffold new servers            | ❌            | ✅                        |
+| Usable from AI agents           | ❌            | ✅ (itself an MCP server) |
+| AI context file generation      | ❌            | ✅                        |
+
 ## Two ways to use it
 
 **As a CLI — fast feedback while you build:**
@@ -153,18 +163,6 @@ Kondukt supports both transports defined by the MCP spec:
 
 - **stdio** — pass the command directly: `npx kondukt test "npx -y my-server"`
 - **HTTP / SSE** — pass a URL: `npx kondukt test "https://my-server.example.com/mcp"`
-
-## Comparison
-
-|                                 | MCP Inspector | Kondukt                   |
-| ------------------------------- | ------------- | ------------------------- |
-| Inspect tools/resources/prompts | ✅            | ✅                        |
-| Call tools interactively        | ✅            | ✅                        |
-| Protocol validation             | ❌            | ✅ (19 rules)             |
-| Quality score                   | ❌            | ✅ (0–100)                |
-| Scaffold new servers            | ❌            | ✅                        |
-| Usable from AI agents           | ❌            | ✅ (itself an MCP server) |
-| AI context file generation      | ❌            | ✅                        |
 
 ## Development
 
