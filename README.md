@@ -1,97 +1,125 @@
-# kondukt
+<div align="center">
 
-> MCP DevTools — test, validate, debug, and scaffold MCP servers.
+# Kondukt
+
+**Postman for MCP servers — test, validate, debug, and scaffold.**
 
 [![npm version](https://img.shields.io/npm/v/kondukt.svg)](https://www.npmjs.com/package/kondukt)
-[![license](https://img.shields.io/npm/l/kondukt.svg)](./LICENSE)
-[![CI](https://github.com/kondukt-dev/core/actions/workflows/ci.yml/badge.svg)](https://github.com/kondukt-dev/core/actions/workflows/ci.yml)
+[![npm downloads](https://img.shields.io/npm/dw/kondukt.svg)](https://www.npmjs.com/package/kondukt)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![MCP Compatible](https://img.shields.io/badge/MCP-compatible-blue.svg)](https://modelcontextprotocol.io)
 
-Kondukt is the dev toolkit for the [Model Context Protocol](https://modelcontextprotocol.io) —
-a CLI, an SDK, and (uniquely) an MCP server itself that lets AI assistants like Claude Code,
-Codex, and Gemini test, validate, and scaffold other MCP servers through natural language.
+</div>
 
-## Quick start
+---
+
+Kondukt is an open-source developer toolkit for the [Model Context Protocol (MCP)](https://modelcontextprotocol.io). It connects to any MCP server, inspects what it exposes, validates protocol compliance, calls tools interactively, and scaffolds new servers from templates.
+
+**And it's itself an MCP server** — so you can register it with Claude Code, Codex, or Gemini CLI, and ask your AI agent to test and validate other MCP servers for you.
+
+<!-- GIF / demo video goes here -->
+
+> **Status:** v0.1.x. Stable enough for daily use, but still evolving. Bug reports and PRs welcome.
+
+## Two ways to use it
+
+**As a CLI — fast feedback while you build:**
 
 ```bash
-# Connect to any MCP server and see what it exposes
 npx kondukt test "npx -y @modelcontextprotocol/server-everything"
-
-# Validate it against the MCP specification
 npx kondukt validate "npx -y @modelcontextprotocol/server-everything"
-
-# Generate a new MCP server project
-npx kondukt scaffold my-server --template typescript \
-  --tool "get_weather:Get weather for city:city:string"
-
-# Generate a context file for your AI coding tool
-npx kondukt agent-docs . --target codex     # writes AGENTS.md
-npx kondukt agent-docs . --all              # writes CLAUDE.md + AGENTS.md + GEMINI.md
 ```
 
-## Use as an MCP server (Claude Code, Codex, Gemini)
-
-Kondukt is itself an MCP server. Register it once and your AI assistant can drive MCP servers
-through natural language.
-
-### Claude Code
+**As an MCP server — your agent does the work:**
 
 ```bash
 claude mcp add kondukt -- npx kondukt serve
 ```
 
-Then ask Claude: _"Test my MCP server at `npx my-server` and validate it."_
+Then, inside Claude Code:
 
-### Codex
+> "Test the MCP server at `npx my-server` and tell me what tools it exposes. Then run a validation and fix anything that fails."
 
-Add to your Codex MCP config (`~/.codex/config.toml` or equivalent):
+Claude calls Kondukt's tools directly. No context-switching between terminal and editor.
 
-```toml
-[mcp_servers.kondukt]
-command = "npx"
-args = ["kondukt", "serve"]
+## Quick start
+
+No install needed — everything runs via `npx`.
+
+```bash
+# Discover tools, resources, and prompts on any MCP server
+npx kondukt test "npx -y @modelcontextprotocol/server-everything"
+
+# Run 19 protocol compliance checks and get a 0–100 score
+npx kondukt validate "npx -y @modelcontextprotocol/server-everything"
+
+# Call a specific tool with arguments
+npx kondukt call "npx -y @modelcontextprotocol/server-everything" \
+  --tool echo --args '{"message": "hello"}'
+
+# Generate a new MCP server project
+npx kondukt scaffold my-server --template typescript \
+  --tool "get_weather:Get weather for city:city:string"
+
+# Generate AI context files (CLAUDE.md, AGENTS.md, GEMINI.md) for this repo
+npx kondukt agent-docs . --all
 ```
 
-### Gemini CLI
+## Features
 
-Add to `~/.gemini/settings.json`:
+### `kondukt test` — inspect any MCP server
 
-```json
-{
-  "mcpServers": {
-    "kondukt": { "command": "npx", "args": ["kondukt", "serve"] }
-  }
-}
+Connects to a server (stdio or HTTP/SSE), auto-discovers tools, resources, and prompts, and prints them in a structured, readable format.
+
+### `kondukt validate` — 19 protocol rules, 0–100 score
+
+Four categories:
+
+- **Tools** — schema validity, descriptions, naming conventions
+- **Resources** — URI formats, MIME types, metadata
+- **Prompts** — argument schemas, descriptions
+- **Protocol** — initialization, capabilities, error handling
+
+Every violation comes with a rule ID, severity, and a suggested fix.
+
+### `kondukt call` — interactive debugging
+
+Execute any tool exposed by a server with custom arguments. See the raw response. Essential for reproducing bugs.
+
+### `kondukt scaffold` — new server in 10 seconds
+
+Generates a complete, runnable MCP server project. TypeScript or Python templates. Includes types, tests, CI config, and README. Define tools from the CLI:
+
+```bash
+npx kondukt scaffold weather-server \
+  --template typescript \
+  --tool "get_forecast:Get forecast:city:string,days:number"
 ```
 
-## CLI reference
+### `kondukt agent-docs` — context files for AI coding tools
 
-```
-kondukt test <cmd>                              Show server capabilities
-  kondukt test --url <url>                        (HTTP transport)
-  kondukt test --bearer <token> ...               (auth)
+Analyzes a codebase and generates `CLAUDE.md`, `AGENTS.md`, or `GEMINI.md`. Detects frameworks, ORMs, test runners, and project conventions via static analysis.
 
-kondukt inspect <cmd> [--tools|--resources|--prompts|--tool <name>]
-                                                Show tables / schemas
+### `kondukt serve` — run Kondukt as an MCP server
 
-kondukt call --tool <name> --args <json> <cmd>  Call a tool and print the result
+Exposes all of the above as MCP tools. Register once, use from any MCP-compatible agent.
 
-kondukt validate <cmd>                          Run 19 protocol rules, print a 0–100 score
+## Install
 
-kondukt scaffold <name> --template ts|py [--tool <spec>...]
-                                                Generate a new MCP server project
+Most commands work with zero install via `npx`. For frequent use:
 
-kondukt agent-docs [path] [--target claude|codex|gemini] [--all]
-                                                Generate CLAUDE.md / AGENTS.md / GEMINI.md
-
-kondukt serve [--http --port N]                 Run Kondukt itself as an MCP server
+```bash
+npm install -g kondukt
 ```
 
-All commands accept `--format json` for machine-readable output.
+Or use it as a library:
 
-## SDK usage
+```bash
+npm install kondukt
+```
 
 ```ts
-import { McpConnection } from "kondukt";
+import { McpConnection, SchemaValidator } from "kondukt";
 
 const conn = new McpConnection({
   type: "stdio",
@@ -99,85 +127,49 @@ const conn = new McpConnection({
   args: ["-y", "@modelcontextprotocol/server-everything"],
 });
 
-const info = await conn.connect();
-console.log(info.name, info.toolCount);
-
-const tools = await conn.listTools();
-const result = await conn.callTool("echo", { text: "hello" });
-
+await conn.connect();
+const result = await new SchemaValidator().validate(conn);
 await conn.disconnect();
+
+console.log(result.score); // 0–100
+console.log(result.issues);
 ```
 
-Deeper imports: `kondukt/client`, `kondukt/server`, `kondukt/validator`, `kondukt/scaffold`, `kondukt/agent-docs`.
+## Transports
 
-## Scaffold
+Kondukt supports both transports defined by the MCP spec:
 
-```bash
-npx kondukt scaffold my-weather --template typescript \
-  --tool "get_weather:Get weather for city:city:string" \
-  --tool "get_forecast:N-day forecast:city:string,days:number"
-```
+- **stdio** — pass the command directly: `npx kondukt test "npx -y my-server"`
+- **HTTP / SSE** — pass a URL: `npx kondukt test "https://my-server.example.com/mcp"`
 
-Produces a fully runnable project:
+## Why Kondukt
 
-```
-my-weather/
-├── src/index.ts          # MCP server with both tools stubbed
-├── package.json          # with @modelcontextprotocol/sdk
-├── tsconfig.json
-├── README.md
-├── .gitignore
-└── .github/workflows/ci.yml
-```
+MCP has 97M+ SDK downloads and 10,000+ published servers. Every major AI vendor ships it. And yet, building an MCP server today feels like writing HTTP APIs in 2005 — no Postman, no linter, no scaffolder. The only existing tool (MCP Inspector) is a basic debugger; there's no validation, no scoring, no project generation.
 
-Templates: `typescript` (Node 20+) and `python` (FastMCP).
+Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it should save you hours.
 
-## Agent-docs generator
+## Comparison
 
-Static analysis of an existing project → a context file that AI coding tools read:
-
-```bash
-kondukt agent-docs .                    # CLAUDE.md
-kondukt agent-docs . --target codex     # AGENTS.md
-kondukt agent-docs . --target gemini    # GEMINI.md
-kondukt agent-docs . --all              # all three
-```
-
-Analyzers inspect `package.json` / `pyproject.toml`, directory structure, scripts, and framework/ORM/state/test patterns. Sections are emitted only when there's evidence — no hallucinated content.
-
-## Validation rules
-
-**Tools (7):** `tool-has-description`, `tool-description-quality`, `tool-schema-valid`, `tool-schema-has-types`, `tool-required-fields-exist`, `tool-name-convention`, `tool-no-duplicate-names`.
-
-**Resources (4):** `resource-has-uri`, `resource-valid-uri`, `resource-has-name`, `resource-has-mime`.
-
-**Prompts (3):** `prompt-has-description`, `prompt-args-described`, `prompt-required-args-marked`.
-
-**Protocol (5):** `server-responds-initialize`, `server-reports-capabilities`, `server-responds-ping`, `tools-list-stable`, `server-version-valid`.
-
-Scoring: 100 − 10·errors − 3·warnings, clamped to [0, 100].
-
-## API reference
-
-Every public entry point ships TypeScript declarations. Start with `kondukt` for the default export
-(client SDK), or deep-import into `kondukt/validator`, `kondukt/scaffold`, `kondukt/agent-docs` for
-specific subsystems. Generated `.d.ts` files live in `dist/**/*.d.ts`.
-
-## Web app
-
-A visual UI around these same capabilities is coming at [app.kondukt.dev](https://app.kondukt.dev).
+|                                 | MCP Inspector | Kondukt                   |
+| ------------------------------- | ------------- | ------------------------- |
+| Inspect tools/resources/prompts | ✅            | ✅                        |
+| Call tools interactively        | ✅            | ✅                        |
+| Protocol validation             | ❌            | ✅ (19 rules)             |
+| Quality score                   | ❌            | ✅ (0–100)                |
+| Scaffold new servers            | ❌            | ✅                        |
+| Usable from AI agents           | ❌            | ✅ (itself an MCP server) |
+| AI context file generation      | ❌            | ✅                        |
 
 ## Contributing
 
-Bug reports and pull requests welcome at [github.com/kondukt-dev/core](https://github.com/kondukt-dev/core/issues).
+Issues, PRs, and feedback all welcome.
 
-1. Fork, clone, `pnpm install`.
-2. Make your change on a `feature/*` branch from `dev`.
-3. `pnpm typecheck && pnpm lint && pnpm test:coverage` must be green.
-4. Open a PR into `dev`. CI runs on Node 20 and 22.
-
-Commits follow [Conventional Commits](https://www.conventionalcommits.org/).
+If you find a bug, the fastest path is an issue with a reproducing command. If Kondukt's validator gets something wrong, that's also a bug — file it.
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+[MIT](./LICENSE)
+
+## Author
+
+Built by **Alex Burov** — [GitHub](https://github.com/kondukt-dev) · [X/Twitter](https://x.com/alexburovmain)
