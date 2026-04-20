@@ -45,7 +45,8 @@ export function buildConfigFromCli(
   }
 
   if (hasStdio) {
-    const [head, ...rest] = stdioArgs!;
+    const tokens = normalizeStdioArgs(stdioArgs!);
+    const [head, ...rest] = tokens;
     const cfg: StdioServerConfig = { type: "stdio", command: head! };
     if (rest.length > 0) cfg.args = rest;
     if (opts.timeout) cfg.timeout = opts.timeout;
@@ -57,6 +58,48 @@ export function buildConfigFromCli(
   const auth = buildAuth(opts);
   if (auth) cfg.auth = auth;
   return cfg;
+}
+
+// The README documents `kondukt test "npx -y @foo/bar"` with the command as a
+// single quoted string. Commander treats that as one positional token, so we
+// split it ourselves when the user passes a single arg with whitespace.
+function normalizeStdioArgs(args: string[]): string[] {
+  if (args.length === 1 && /\s/.test(args[0]!)) {
+    return splitShellWords(args[0]!);
+  }
+  return args;
+}
+
+function splitShellWords(input: string): string[] {
+  const out: string[] = [];
+  let buf = "";
+  let quote: '"' | "'" | null = null;
+  for (let i = 0; i < input.length; i++) {
+    const ch = input[i]!;
+    if (quote) {
+      if (ch === quote) quote = null;
+      else buf += ch;
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      continue;
+    }
+    if (ch === "\\" && i + 1 < input.length) {
+      buf += input[++i];
+      continue;
+    }
+    if (/\s/.test(ch)) {
+      if (buf.length) {
+        out.push(buf);
+        buf = "";
+      }
+      continue;
+    }
+    buf += ch;
+  }
+  if (buf.length) out.push(buf);
+  return out;
 }
 
 function buildAuth(opts: CliConnectOptions): AuthConfig | undefined {

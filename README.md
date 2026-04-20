@@ -17,7 +17,7 @@ Kondukt is an open-source developer toolkit for the [Model Context Protocol (MCP
 
 **And it's itself an MCP server** — so you can register it with Claude Code, Codex, or Gemini CLI, and ask your AI agent to test and validate other MCP servers for you.
 
-<!-- GIF / demo video goes here -->
+![Kondukt demo](./assets/demo.gif)
 
 > **Status:** v0.1.x. Stable enough for daily use, but still evolving. Bug reports and PRs welcome.
 
@@ -159,6 +159,17 @@ Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it sho
 | Scaffold new servers            | ❌            | ✅                        |
 | Usable from AI agents           | ❌            | ✅ (itself an MCP server) |
 | AI context file generation      | ❌            | ✅                        |
+
+## Development
+
+### Regenerating the demo assets
+
+Run `./scripts/record-demo.sh`. Requires Homebrew.
+
+The script builds the CLI, records a fresh `.cast` with `asciinema`, renders it
+to `.gif` via `agg`, and produces a web-friendly `.mp4` with `ffmpeg`. All three
+outputs land in `assets/` and are committed so the README renders on GitHub
+without a build step.
 
 ## Contributing
 
