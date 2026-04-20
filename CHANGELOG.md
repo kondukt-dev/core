@@ -7,6 +7,18 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-04-20
+
+### Fixed
+
+- **Scaffold** — `kondukt scaffold` no longer fails with `Template 'typescript' not found` when invoked through the bundled CLI. 0.1.0 on npm shipped a broken scaffold command because tsup inlines scaffold into `dist/cli/index.js`, and the template lookup only checked `SELF_DIR/templates`. The generator now also checks `SELF_DIR/../scaffold/templates`, so it works from the bundled CLI, the standalone scaffold entry, and directly from source.
+- **CLI** — `kondukt test "npx -y @foo/bar"` (the quoted-string form documented throughout the README) now works. Commander was treating the whole quoted string as one positional token; `buildConfigFromCli` now shell-splits a single whitespace-containing arg.
+
+### Added
+
+- **Demo recording pipeline** — `scripts/record-demo.sh` plus per-feature scenarios under `scripts/scenarios/` regenerate four GIFs (`demo`, `scaffold`, `call`, `agent-docs`) from scratch in one command. `.cast` and `.mp4` byproducts live in a gitignored `assets/local/`.
+- **README** — marketing-style refresh (Postman-for-MCP framing), demo GIF at the top, per-feature GIFs under each subsection, Why + Comparison consolidated into a single pitch block.
+
 ## [0.1.0] — 2026-04-18
 
 Initial release.
@@ -21,5 +33,6 @@ Initial release.
 - **CLI** — `kondukt test`, `inspect`, `call`, `validate`, `scaffold`, `agent-docs`, `serve`. Deprecated alias `kondukt claudemd`.
 - **Public API entry points** — `kondukt`, `kondukt/client`, `kondukt/server`, `kondukt/validator`, `kondukt/scaffold`, `kondukt/agent-docs`, `kondukt/claudemd` (deprecated).
 
-[Unreleased]: https://github.com/kondukt-dev/core/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/kondukt-dev/core/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/kondukt-dev/core/releases/tag/v0.1.1
 [0.1.0]: https://github.com/kondukt-dev/core/releases/tag/v0.1.0
