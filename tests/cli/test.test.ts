@@ -26,4 +26,10 @@ describe("kondukt test", () => {
     const r = await cli(["test", "node", "-e", "process.exit(1)"]);
     expect(r.exitCode).not.toBe(0);
   });
+
+  it("accepts a single quoted-string command (README form)", async () => {
+    const r = await cli(["test", mockCmd.join(" ")]);
+    expect(r.exitCode).toBe(0);
+    expect(r.stdout).toContain("mock-server");
+  });
 });

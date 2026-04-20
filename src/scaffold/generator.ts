@@ -1,17 +1,35 @@
 import Handlebars from "handlebars";
-import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import type { ScaffoldConfig, ScaffoldResult, ScaffoldTool } from "./types.js";
 
 const SELF_DIR = dirname(fileURLToPath(import.meta.url));
-const TEMPLATES_ROOT = resolve(SELF_DIR, "templates");
+// Templates live in src/scaffold/templates at dev time and dist/scaffold/templates after build.
+// When tsup bundles the CLI entry, scaffold code runs with SELF_DIR = dist/cli/, so we also
+// look one level up in a sibling scaffold/templates directory.
+const TEMPLATE_ROOTS = [
+  resolve(SELF_DIR, "templates"),
+  resolve(SELF_DIR, "..", "scaffold", "templates"),
+];
+
+function resolveTemplateDir(template: string): string | null {
+  for (const root of TEMPLATE_ROOTS) {
+    const dir = join(root, template);
+    if (existsSync(dir)) return dir;
+  }
+  return null;
+}
 
 export class ScaffoldGenerator {
   async generate(config: ScaffoldConfig): Promise<ScaffoldResult> {
-    const templateDir = join(TEMPLATES_ROOT, config.template);
-    assertExists(templateDir, `Template '${config.template}' not found at ${templateDir}`);
+    const templateDir = resolveTemplateDir(config.template);
+    if (!templateDir) {
+      throw new Error(
+        `Template '${config.template}' not found (looked in: ${TEMPLATE_ROOTS.join(", ")})`,
+      );
+    }
 
     const outputRoot = join(config.outputDir, config.name);
     mkdirSync(outputRoot, { recursive: true });
@@ -25,14 +43,6 @@ export class ScaffoldGenerator {
       files: files.sort(),
       nextSteps: buildNextSteps(config),
     };
-  }
-}
-
-function assertExists(path: string, message: string): void {
-  try {
-    statSync(path);
-  } catch {
-    throw new Error(message);
   }
 }
 

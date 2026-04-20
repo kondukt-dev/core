@@ -148,3 +148,7 @@ coverage/
 
 # Private testing / operator notes — never commit
 TESTING_FOR_HUMANS*.md
+
+# Demo recording byproducts — only the committed .gif files in assets/ ship; the
+# cast + mp4 are regeneratable locally via scripts/record-demo.sh.
+assets/local/
