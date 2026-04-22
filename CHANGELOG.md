@@ -7,6 +7,14 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- **Validator** — dropped the `tool-name-convention` rule (snake_case enforcement). MCP spec does not prescribe a naming style and the rule produced false-positive info noise against kebab-case servers (including Anthropic's own reference servers). The rule set is now 18 rules (6 tool / 4 resource / 3 prompt / 5 protocol).
+
+### Added
+
+- **Demo** — fifth demo GIF (`assets/validate.gif`) covering `kondukt validate`. Demos now cover test, validate, call, scaffold, and agent-docs.
+
 ## [0.1.1] — 2026-04-20
 
 ### Fixed

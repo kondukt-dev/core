@@ -31,7 +31,7 @@ Kondukt is the tool I wanted and couldn't find. If you build MCP servers, it sho
 | ------------------------------- | ------------- | ------------------------- |
 | Inspect tools/resources/prompts | ✅            | ✅                        |
 | Call tools interactively        | ✅            | ✅                        |
-| Protocol validation             | ❌            | ✅ (19 rules)             |
+| Protocol validation             | ❌            | ✅ (18 rules)             |
 | Quality score                   | ❌            | ✅ (0–100)                |
 | Scaffold new servers            | ❌            | ✅                        |
 | Usable from AI agents           | ❌            | ✅ (itself an MCP server) |
@@ -66,7 +66,7 @@ No install needed — everything runs via `npx`.
 # Discover tools, resources, and prompts on any MCP server
 npx kondukt test "npx -y @modelcontextprotocol/server-everything"
 
-# Run 19 protocol compliance checks and get a 0–100 score
+# Run 18 protocol compliance checks and get a 0–100 score
 npx kondukt validate "npx -y @modelcontextprotocol/server-everything"
 
 # Call a specific tool with arguments
@@ -87,16 +87,18 @@ npx kondukt agent-docs . --all
 
 Connects to a server (stdio or HTTP/SSE), auto-discovers tools, resources, and prompts, and prints them in a structured, readable format.
 
-### `kondukt validate` — 19 protocol rules, 0–100 score
+### `kondukt validate` — 18 protocol rules, 0–100 score
 
 Four categories:
 
-- **Tools** — schema validity, descriptions, naming conventions
+- **Tools** — schema validity, descriptions, duplicate names
 - **Resources** — URI formats, MIME types, metadata
 - **Prompts** — argument schemas, descriptions
 - **Protocol** — initialization, capabilities, error handling
 
 Every violation comes with a rule ID, severity, and a suggested fix.
+
+![kondukt validate](./assets/validate.gif)
 
 ### `kondukt call` — interactive debugging
 
