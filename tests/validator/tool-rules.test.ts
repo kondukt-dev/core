@@ -83,17 +83,6 @@ describe("tool-required-fields-exist", () => {
   });
 });
 
-describe("tool-name-convention", () => {
-  it("emits info for non-snake_case names", () => {
-    const issues = runToolRules([makeTool({ name: "SearchItems" })]);
-    expect(issues.some((i) => i.rule === "tool-name-convention")).toBe(true);
-  });
-  it("accepts snake_case names", () => {
-    const issues = runToolRules([makeTool({ name: "search_items" })]);
-    expect(issues.some((i) => i.rule === "tool-name-convention")).toBe(false);
-  });
-});
-
 describe("tool-no-duplicate-names", () => {
   it("emits error once for duplicate names", () => {
     const issues = runToolRules([
@@ -108,8 +97,8 @@ describe("tool-no-duplicate-names", () => {
 });
 
 describe("TOOL_RULES registry", () => {
-  it("exports 7 rule ids", () => {
-    expect(TOOL_RULES.length).toBe(7);
-    expect(new Set(TOOL_RULES.map((r) => r.id)).size).toBe(7);
+  it("exports 6 rule ids", () => {
+    expect(TOOL_RULES.length).toBe(6);
+    expect(new Set(TOOL_RULES.map((r) => r.id)).size).toBe(6);
   });
 });
