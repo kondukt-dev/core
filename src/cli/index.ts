@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander";
 
+import pkg from "../../package.json" with { type: "json" };
 import { registerAgentDocsCommand } from "./commands/agent-docs.js";
 import { registerCallCommand } from "./commands/call.js";
 import { registerClaudeMdCommand } from "./commands/claudemd.js";
@@ -14,7 +15,7 @@ const program = new Command();
 program
   .name("kondukt")
   .description("MCP DevTools — test, validate, debug, and scaffold MCP servers")
-  .version("0.1.0-dev.0")
+  .version(pkg.version)
   .enablePositionalOptions();
 
 registerTestCommand(program);
