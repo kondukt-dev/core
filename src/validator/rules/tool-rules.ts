@@ -6,7 +6,6 @@ export interface ToolRule {
   run: (tools: Tool[]) => ValidationIssue[];
 }
 
-const SNAKE_CASE = /^[a-z][a-z0-9]*(?:_[a-z0-9]+)*$/;
 const TODO_RE = /^(TODO|FIXME|XXX)$/i;
 
 function forEachTool(
@@ -125,23 +124,6 @@ export const toolRequiredFieldsExist: ToolRule = {
   },
 };
 
-export const toolNameConvention: ToolRule = {
-  id: "tool-name-convention",
-  run: (tools) =>
-    forEachTool(tools, (t, i) => {
-      if (!SNAKE_CASE.test(t.name)) {
-        return {
-          severity: "info",
-          rule: "tool-name-convention",
-          message: `Tool name '${t.name}' is not snake_case`,
-          path: `tools[${i}].name`,
-          suggestion: "Rename to snake_case (e.g. 'search_items').",
-        };
-      }
-      return undefined;
-    }),
-};
-
 export const toolNoDuplicateNames: ToolRule = {
   id: "tool-no-duplicate-names",
   run: (tools) => {
@@ -166,7 +148,6 @@ export const TOOL_RULES: readonly ToolRule[] = [
   toolSchemaValid,
   toolSchemaHasTypes,
   toolRequiredFieldsExist,
-  toolNameConvention,
   toolNoDuplicateNames,
 ] as const;
 

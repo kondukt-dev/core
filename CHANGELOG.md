@@ -7,6 +7,20 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-04-22
+
+### Changed
+
+- **Validator** — dropped the `tool-name-convention` rule (snake_case enforcement). MCP spec does not prescribe a naming style and the rule produced false-positive info noise against kebab-case servers (including Anthropic's own reference servers). The rule set is now 18 rules (6 tool / 4 resource / 3 prompt / 5 protocol).
+
+### Fixed
+
+- **CLI** — `kondukt --version` now reports the real package version instead of the hardcoded `0.1.0-dev.0` placeholder.
+
+### Added
+
+- **Demo** — fifth demo GIF (`assets/validate.gif`) covering `kondukt validate`. Demos now cover test, validate, call, scaffold, and agent-docs.
+
 ## [0.1.1] — 2026-04-20
 
 ### Fixed
@@ -33,6 +47,7 @@ Initial release.
 - **CLI** — `kondukt test`, `inspect`, `call`, `validate`, `scaffold`, `agent-docs`, `serve`. Deprecated alias `kondukt claudemd`.
 - **Public API entry points** — `kondukt`, `kondukt/client`, `kondukt/server`, `kondukt/validator`, `kondukt/scaffold`, `kondukt/agent-docs`, `kondukt/claudemd` (deprecated).
 
-[Unreleased]: https://github.com/kondukt-dev/core/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/kondukt-dev/core/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/kondukt-dev/core/releases/tag/v0.1.2
 [0.1.1]: https://github.com/kondukt-dev/core/releases/tag/v0.1.1
 [0.1.0]: https://github.com/kondukt-dev/core/releases/tag/v0.1.0
