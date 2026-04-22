@@ -1,6 +1,6 @@
 {
   "name": "kondukt",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "MCP DevTools — test, validate, debug, and scaffold MCP servers for Claude Code, Codex, Gemini CLI, and any MCP client.",
   "type": "module",
   "license": "MIT",
