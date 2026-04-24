@@ -32,7 +32,7 @@ describe("test_server tool", () => {
     expect(result.isError).toBe(true);
     const first = result.content[0];
     if (first?.type !== "text") throw new Error("expected text content");
-    expect(first.text).toMatch(/Failed to connect/);
+    expect(first.text).toMatch(/exited before handshake/i);
   });
 });
 

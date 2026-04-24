@@ -21,6 +21,28 @@ import type {
 
 const log = debug("kondukt:client:connection");
 
+function looksLikeEarlyExit(err: unknown): boolean {
+  let current: unknown = err;
+  for (let depth = 0; depth < 5 && current != null; depth++) {
+    if (typeof current !== "object") break;
+    const node = current as { code?: unknown; message?: unknown; cause?: unknown };
+    if (node.code === "EPIPE" || node.code === "ENOENT" || node.code === -32000) return true;
+    if (typeof node.message === "string") {
+      const m = node.message.toLowerCase();
+      if (
+        m.includes("epipe") ||
+        m.includes("enoent") ||
+        m.includes("spawn ") ||
+        m.includes("connection closed")
+      ) {
+        return true;
+      }
+    }
+    current = node.cause;
+  }
+  return false;
+}
+
 export class McpConnection extends EventEmitter {
   readonly id: string;
   readonly config: ServerConfig;
@@ -67,8 +89,11 @@ export class McpConnection extends EventEmitter {
       log("connected to %s (%s)", info.name, info.version);
       return info;
     } catch (err) {
-      this.setStatus("error", err instanceof Error ? err.message : String(err));
-      throw new ConnectionError("Failed to connect to MCP server", { cause: err });
+      const message = looksLikeEarlyExit(err)
+        ? "target process exited before handshake"
+        : "Failed to connect to MCP server";
+      this.setStatus("error", message);
+      throw new ConnectionError(message, { cause: err });
     }
   }
 

@@ -152,13 +152,23 @@ describe("McpConnection — not connected", () => {
     await expect(conn.ping()).rejects.toThrow(/Not connected/);
   });
 
-  it("connect failure surfaces as ConnectionError", async () => {
+  it("reports 'exited before handshake' when target process dies immediately (EPIPE)", async () => {
     const conn = new McpConnection({
       type: "stdio",
       command: "node",
       args: ["-e", "process.exit(1)"],
     });
-    await expect(conn.connect()).rejects.toThrow(/Failed to connect/);
+    await expect(conn.connect()).rejects.toThrow(/exited before handshake/i);
+    expect(conn.status).toBe("error");
+  });
+
+  it("reports 'exited before handshake' when target command is missing (ENOENT)", async () => {
+    const conn = new McpConnection({
+      type: "stdio",
+      command: "kondukt-this-binary-definitely-does-not-exist",
+      args: [],
+    });
+    await expect(conn.connect()).rejects.toThrow(/exited before handshake/i);
     expect(conn.status).toBe("error");
   });
 

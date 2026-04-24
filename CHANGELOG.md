@@ -7,6 +7,12 @@ this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-04-24
+
+### Fixed
+
+- **Client SDK** — `McpConnection.connect()` now reports `target process exited before handshake` instead of leaking raw `EPIPE` / `ENOENT` / `MCP error -32000: Connection closed` when a stdio target fails to start (missing binary, immediate exit, stdin write to a dead child). The original error is preserved via `ConnectionError.cause`, and the emitted `statusChange` error field matches.
+
 ## [0.1.2] — 2026-04-22
 
 ### Changed
